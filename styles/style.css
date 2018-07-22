@@ -1,0 +1,41 @@
+@CHARSET "UTF-8";
+html, body {
+	background-color: #fff;
+	color: #000;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+}
+
+#top {
+	width: 800px;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: left;
+}
+
+#NAGLOWEK {
+	background-color: #888;
+}
+
+#MENU {
+	height: 600px;
+	width: 200px;
+	float: left;
+	overflow: hidden;
+	background-color: #ccc;
+}
+
+#TRESC {
+	height: 600px;
+	width: 600px;
+	float: right;
+	overflow: scroll;
+	background-color: #fff;
+}
+
+#STOPKA {
+	clear: both;
+	width: 100%;
+	background-color: #888;
+}
