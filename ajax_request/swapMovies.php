@@ -1,11 +1,11 @@
 <?php
-//require_once 'include/settings.php';
+require_once '../include/settings.php';
 //require_once 'include/functions.php';
-$DBEngine = 'mysql';
+/*$DBEngine = 'mysql';
 $DBServer = 'localhost:3306';
 $DBUser   = 'root';
 $DBPass   = '';
-$DBName   = 'firma';
+$DBName   = 'firma';*/
 
 function availibilityCheck($pdo,$nazwa_sali,$data,$start,$stop){
     $inner=0;

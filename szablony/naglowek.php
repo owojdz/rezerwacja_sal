@@ -1,4 +1,4 @@
-Witamy na stronie wypożyczalni "Nasza wypożyczalnia". Jesteś w <?php echo $LOKALIZACJA;?>.
+Witamy na stronie grupy nr 8 - "Rezerwacja sal w firmie"
 <?php 
 if (isset($_SESSION['username'])){
     echo "Jesteś zalogowany jako <b>".$_SESSION['username']."</b>";

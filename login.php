@@ -11,7 +11,9 @@ $form=NibbleForm::getInstance('','Zaloguj się','post',true,'list');
 $form->username = new Text('Podaj swój login', true, 20, '/[a-zA-Z0-9]+/');
 $form->password = new Password('Podaj hasło', 6, true, true, 12);
 $TRESC="";
-$TRESC.="Przykładowy login: <b>smith</b>, hasło: <b>zaq12wsx</b>".PHP_EOL;
+$TRESC.="Przykładowy login: <b>jkowal</b>, hasło: <b>zaq12wsx</b><br/>".PHP_EOL;
+$TRESC.="Przykładowy login: <b>kpucha</b>, hasło: <b>zaq12wsx</b><br/>".PHP_EOL;
+$TRESC.="Przykładowy login: <b>admin</b>, hasło: <b>zaq12wsx</b><br/>".PHP_EOL;
 
 if (isset($_POST['submit'])){
     if($form->validate()){

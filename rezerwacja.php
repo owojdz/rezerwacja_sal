@@ -11,26 +11,30 @@
 function checkform ( form )
 {
     if (form.timestart.value >= form.timefinish.value) {
-        alert( "Czas końca nie jest późniejszy niż czas początku spotkania"+form.timestart.value+"  "+form.timefinish.value );
+//        alert( "Czas końca nie jest późniejszy niż czas początku spotkania"+form.timestart.value+"  "+form.timefinish.value );
         return false ;
     }
-
-    
     return true;
 }
 function enable() {
-    document.getElementById("timefinish").disabled=false;
+//    document.getElementById("timefinish").disabled=false;    
 }
-
+function add_one() {
+	var str=document.getElementById("timestart").value;
+	var h=str.slice(0, 2);
+	var res = str.slice(2, 8);
+	var hint = parseInt(h);
+	hint=hint+1;
+	str = hint.toString();
+	if (hint<10) str="0".concat(str);
+	str = str.concat(res);
+	document.getElementById("timefinish").value=str;
+}
 function edit(id) {
-//  document.getElementById("timefinish").disabled=false;
-//	self.location.href=edit.php?id='90';
 	var str1 = "edit.php?id=";
 	var str2 = id;
 	var res = str1.concat(str2);
-//this.open("edit.php?id=90","_self");
 	this.open(res,"_self");
-//	document.getElementById("wynik").value=id;	
 }
 function del(id) {
  	if (confirm("Czy napewno usunąć rezerwację?")  ){
@@ -47,29 +51,14 @@ function del(id) {
 function formGenerate($action,$warning){
     $form="<form  name'formularz' action='$action' method='post' onsubmit=\"return checkform(this);\">";
     $form.="<fieldset><legend>Dodawanie rezerwacji</legend>";
-    $form.=$warning;
+//    $form.=$warning;
+    $form.="<p id='warning' type='hidden'></p>";
     $form.="Data: <input type='date' name='data' id='data' min='2010-01-01' max='2020-12-31' value='" . date('Y-m-d') . "' required /><br />";
-    $form.="Początek: <input type='time' name='timestart' id='timestart' min='07:00' max='16:00' step='1800' value='07:00' onclick='enable()'/> <br />";
-    $form.="Koniec: <input type='time' name='timefinish' id='timefinish' min='07:00' max='16:00' step='1800' value='16:00' disabled='true'/> <br />";
+    $form.="Początek: <input type='time' name='timestart' id='timestart' min='07:00' max='16:00' step='1800' value='07:00' onclick='enable()' onchange='add_one()'/> <br />";
+    $form.="Koniec: <input type='time' name='timefinish' id='timefinish' min='07:00' max='16:00' step='1800' value='08:00' /> <br />";//disabled='false'
     $form.="<input type='button' value='Pokaż dostępne sale' name='dostepne' onClick=salaCheckJS(1,1,0) /><br/>";
     $form.="Sala: <select name='sale' id='sale'></select><br />";
-    
-/*    $form.="Sala:  <select name='sala'>";
-		$form.="<option value='Czarna'>Czarna</option>";
-		$form.="<option value='Szara<'>Szara</option>";
-		$form.="<option value='Biała'>Biała</option>";
-		$form.="<option value='Zielona'>Zielona</option>";
-		$form.="<option value='Niebieska'>Niebieska</option>";
-		$form.="<option value='Czerwona'>Czerwona</option>";
-		$form.="</select> <br />";
-		$form.="Data: <input type='date' name='data' min='2010-01-01' max='2020-12-31' value='" . date('Y-m-d') . "' required /><br />";
-    $form.="Początek: <input type='time' name='timestart' min='07:00' max='16:00' step='1800' value='07:00'/> <br />";
-    $form.="Koniec: <input type='time' name='timefinish' min='07:00' max='16:00' step='1800' value='16:00'/> <br />";
-    $form.="wynik: <input type='text' name='wynik' id='wynik'/> <br />";
-    */
-    $form.="<input type='button' value='Edit' onclick='edit(91)' /><br/>";
-    $form.="wynik: <input type='text' name='wynik' id='wynik'/> <br />";
-    
+//    $form.="wynik: <input type='text' name='wynik' id='wynik'/> <br />";
     $form.="<input type='submit' value='Rezerwuj' name='submit' />";
     $form.="</fieldset></form>";
     return $form;
@@ -111,7 +100,6 @@ require_once 'include/obslugaSesji.php';
 require_once 'include/settings.php';
 require_once 'include/functions.php';
 
-//echo '<input type="button" value="Edit" onclick=edit()/>';
 $LOKALIZACJA="aktorzy";
 $warning="";
 
@@ -143,12 +131,14 @@ if (isset($_POST['submit'])) {
 //            $stmt->bindValue(':username', $_SESSION['username'], PDO::PARAM_STR);
             $stmt->execute();
             foreach ($stmt as $row) {
-                echo "id: ".$row['id_pracownika']."<br />";
+//                echo "id: ".$row['id_pracownika']."<br />";
                 $user_id=$row['id_pracownika'];
             }
             
 //            echo $_POST['data'].'  '.$_POST['timestart'].'   '.$_POST['timefinish'].'    '.$_SESSION['username'].'    '.$user_id;
    
+            $stmt = $pdo->query("SET CHARSET utf8");
+            $stmt = $pdo->query("SET NAMES `utf8` COLLATE `utf8_general_ci`");
             
             $stmt = $pdo->prepare('  INSERT INTO
                                         rezerwacje (data, czas_start, czas_stop, id_pracownika, nazwa_sali)

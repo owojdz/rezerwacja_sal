@@ -19,6 +19,10 @@ function salaCheckJS(id_aktora,id_filmu,state) {	//Funkcja wywoływana przy klik
 	$stop=document.getElementById("timefinish").value;
 //	document.getElementById("wynik").value = $data+";"+$start+";"+$stop; 
 //	document.getElementById("wynik").value = $sala; 
+	if($start>=$stop){
+		document.getElementById("warning").innerHTML = "<p type='text' id='warning'><font color='red'>Zakończenie rezerwacji nie jest później niż jej początek. Spróbuj jeszcze raz</font><br /></p>"; 
+	}else{
+		document.getElementById("warning").innerHTML = "<p id='warning' type='hidden'></p>"; 
 			handleAjaxRequest("ajax_request/swapMovies.php?&state="+state+"&data="+$data+"&start="+$start+"&stop="+$stop,
 					function() {
 				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -28,7 +32,8 @@ function salaCheckJS(id_aktora,id_filmu,state) {	//Funkcja wywoływana przy klik
 //					document.getElementById("filmyWithout").innerHTML = requestOutput[0];
 				}
 			});
-}
+	}
+}	
 
 function salaCheckEditJS(id_aktora,id_filmu,state) {	//Funkcja wywoływana przy kliknięciu na pozycję menu
 	$data=document.getElementById("data").value;
@@ -40,6 +45,7 @@ function salaCheckEditJS(id_aktora,id_filmu,state) {	//Funkcja wywoływana przy 
 	if($start>=$stop){
 		document.getElementById("warning").innerHTML = "<p type='text'><font color='red'>Zakończenie rezerwacji nie jest później niż jej początek. Spróbuj jeszcze raz</font><br /></p>"; 
 	}else{
+		document.getElementById("warning").innerHTML = "<p id='warning' type='hidden'></p>"; 
 			handleAjaxRequest("ajax_request/swapMovies.php?&state="+state+"&data="+$data+"&start="+$start+"&stop="+$stop+"&sala="+$sala,
 					function() {
 				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {

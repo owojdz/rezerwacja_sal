@@ -33,7 +33,7 @@ function formGenerate($action,$data,$start,$stop,$sala,$id){
     $form.="Koniec: <input type='time' name='timefinish' id='timefinish' min='07:00' max='16:00' step='1800' value='$stop' /> <br />";
     $form.="<input type='button' value='Pokaż dostępne sale' name='dostepne' onClick=salaCheckEditJS(1,1,0) /><br/>";
     $form.="Sala: <select name='sale' id='sale'></select><br />";
-    $form.="wynik: <input type='text' name='wynik' id='wynik'/> <br />";
+    $form.="<input type='hidden' name='wynik' id='wynik'/> <br />";
     $form.="<input type='hidden' value='$id' name='id' />";
     $form.="<input type='hidden' value='$sala' name='sala' id='sala'/>";
     

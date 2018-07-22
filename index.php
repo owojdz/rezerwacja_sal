@@ -6,11 +6,12 @@ $LOKALIZACJA="Witaj";
 
 //Generacja treści
 $tresc=<<<TRESC
-	To jest strona powitalna
+	To jest strona powitalna projektu nr 8 - rezerwacja sal w firmie
 TRESC;
-$work="";
-for($i=1;$i<50;$i++) $work.=$tresc.PHP_EOL."<br/>";
-$TRESC=$work;
+//$work="";
+//for($i=1;$i<50;$i++) $work.=$tresc.PHP_EOL."<br/>";
+//$TRESC=$work;
+$TRESC=$tresc;
 
 //Przetworzenie szablonów
 require_once 'szablony/witryna.php';
