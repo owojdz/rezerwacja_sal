@@ -1,65 +1,35 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Rezerwacje</title>
-<meta http-equiv="Content-type" content="text/html; charset=UTF-8">
-<meta http-equiv="Content-Script-Type" content="text/javascript">
-<script type="text/javascript" src="js/ajax.js"></script>
-
-<SCRIPT LANGUAGE="JavaScript">
-function checkform ( form )
-{
-    if (form.timestart.value >= form.timefinish.value) {
-//        alert( "Czas końca nie jest późniejszy niż czas początku spotkania"+form.timestart.value+"  "+form.timefinish.value );
-        return false ;
-    }
-    return true;
-}
-function enable() {
-//    document.getElementById("timefinish").disabled=false;    
-}
-function add_one() {
-	var str=document.getElementById("timestart").value;
-	var h=str.slice(0, 2);
-	var res = str.slice(2, 8);
-	var hint = parseInt(h);
-	hint=hint+1;
-	str = hint.toString();
-	if (hint<10) str="0".concat(str);
-	str = str.concat(res);
-	document.getElementById("timefinish").value=str;
-}
-function edit(id) {
-	var str1 = "edit.php?id=";
-	var str2 = id;
-	var res = str1.concat(str2);
-	this.open(res,"_self");
-}
-function del(id) {
- 	if (confirm("Czy napewno usunąć rezerwację?")  ){
- 		var str1 = "delete.php?id=";
- 		var str2 = id;
- 		var res = str1.concat(str2);
- 		this.open(res,"_self");
-	}
-}
-</script>
 <?php 
 
 
+/*<div class='form-group'>
+<label class='col-form-label' for='inputDefault'>Default input</label>
+<input type='text' class='form-control' placeholder='Default input' id='inputDefault'>
+</div>*/
+
 function formGenerate($action,$warning){
-    $form="<form  name'formularz' action='$action' method='post' onsubmit=\"return checkform(this);\">";
+    $form="<form  class='form-group' name'formularz' action='$action' method='post' onsubmit=\"return checkform(this);\">";
     $form.="<fieldset><legend>Dodawanie rezerwacji</legend>";
 //    $form.=$warning;
     $form.="<p id='warning' type='hidden'></p>";
-    $form.="Data: <input type='date' name='data' id='data' min='2010-01-01' max='2020-12-31' value='" . date('Y-m-d') . "' required /><br />";
-    $form.="Początek: <input type='time' name='timestart' id='timestart' min='07:00' max='16:00' step='1800' value='07:00' onclick='enable()' onchange='add_one()'/> <br />";
-    $form.="Koniec: <input type='time' name='timefinish' id='timefinish' min='07:00' max='16:00' step='1800' value='08:00' /> <br />";//disabled='false'
-    $form.="<input type='button' value='Pokaż dostępne sale' name='dostepne' onClick=salaCheckJS(1,1,0) /><br/>";
-    $form.="Sala: <select name='sale' id='sale'></select><br />";
+    $form.="<label class='col-form-label' for='inputDefault'>Data:</label>";
+    $form.="<input type='date' name='data' id='data' min='2010-01-01' max='2020-12-31' value='".date('Y-m-d')."' required class='form-control' placeholder='Default input'>";
+    $form.="<label class='col-form-label' for='inputDefault'>Początek spotkania:</label>";
+    $form.="<input type='time' name='timestart' id='timestart' min='07:00' max='16:00' step='1800' value='07:00' onclick='enable()' onchange='add_one()' required class='form-control' placeholder='Default input'>";
+    $form.="<label class='col-form-label' for='inputDefault'>Koniec spotkania:</label>";
+    $form.="<input type='time' name='timefinish' id='timefinish' min='07:00' max='16:00' step='1800' value='08:00' required class='form-control' placeholder='Default input'><br/>";
+    $form.="<div><input type='button' value='Pokaż dostępne sale' name='dostepne' onClick=salaCheckJS(1,1,0) class='btn btn-secondary btn-lg btn-block'/></div>";
+    $form.="<label class='col-form-label' for='inputDefault'>Dostępne sala:</label>";
+    $form.="<select name='sale' id='sale' class='form-control' required></select><br />";
+    $form.="<div><input type='submit' value='Rezerwuj' name='submit' class='btn btn-primary btn-lg btn-block'/></div><br/>";
+    
+    
+//    $form.="Data: <input type='date' name='data' id='data' min='2010-01-01' max='2020-12-31' value='" . date('Y-m-d') . "' required /><br />";
+//    $form.="Początek: <input type='time' name='timestart' id='timestart' min='07:00' max='16:00' step='1800' value='07:00' onclick='enable()' onchange='add_one()'/> <br />";
+//    $form.="Koniec: <input type='time' name='timefinish' id='timefinish' min='07:00' max='16:00' step='1800' value='08:00' /> <br />";//disabled='false'
+//    $form.="<input type='button' value='Pokaż dostępne sale' name='dostepne' onClick=salaCheckJS(1,1,0) /><br/>";
+//    $form.="Sala: <select name='sale' id='sale'></select><br />";
 //    $form.="wynik: <input type='text' name='wynik' id='wynik'/> <br />";
-    $form.="<input type='submit' value='Rezerwuj' name='submit' />";
+ //   $form.="<input type='submit' value='Rezerwuj' name='submit' />";
     $form.="</fieldset></form>";
     return $form;
 }
@@ -75,13 +45,21 @@ ORDER BY data,czas_start;');
         $HTMLreturnSequence='<b>Lista rezerwacji:</b></br>';
         $HTMLreturnSequence.='<ul>';
         foreach ($stmt as $row) {
-            $HTMLreturnSequence.='<li>' . $row['nazwa_sali'].': '.$row['data'] . ' - ' . $row['czas_start'] . ' - ' . $row['czas_stop']  . ' - ' .  $row['imie'].' '.$row['nazwisko'].'  ';
+            if(($_SESSION['username']==$row['username']) or ($_SESSION['username']=='admin')) {
+                $HTMLreturnSequence.="<input type='button' class='btn btn-info btn-sm' value='Edytuj' onclick='edit(".$row['id_rezerwacji'].")' />";
+            } else {
+                $HTMLreturnSequence.="<input type='button' class='btn btn-info btn-sm' value='Edytuj' disabled='true' onclick='edit(".$row['id_rezerwacji'].")' />";
+            }
+            if(($_SESSION['username']==$row['username']) or ($_SESSION['username']=='admin')) {
+                $HTMLreturnSequence.="<input type='button' class='btn btn-danger btn-sm' value='Usuń' onclick='del(".$row['id_rezerwacji'].")' />";
+            } else {
+                $HTMLreturnSequence.="<input type='button' class='btn btn-danger btn-sm' value='Usuń' disabled='true' onclick='del(".$row['id_rezerwacji'].")' />";
+            }
+            $HTMLreturnSequence.=/*'<li>' .*/'  '. $row['nazwa_sali'].': '.$row['data'] . ' - ' . $row['czas_start'] . ' - ' . $row['czas_stop']  . ' - ' .  $row['imie'].' '.$row['nazwisko'].'  <br/>';
  //           $HTMLreturnSequence.='<a href=aktorzy_del.php?id='.$row['id_aktora'].'> usuń<a/>';
  //           if(($_SESSION['username']==$row['username']) or ($_SESSION['username']=='admin')) $HTMLreturnSequence.='<a href=edit.php?id='.$row['id_rezerwacji'].'> edytuj<a/>';
-            if(($_SESSION['username']==$row['username']) or ($_SESSION['username']=='admin')) $HTMLreturnSequence.="<input type='button' value='Edytuj' onclick='edit(".$row['id_rezerwacji'].")' />";
-            if(($_SESSION['username']==$row['username']) or ($_SESSION['username']=='admin')) $HTMLreturnSequence.="<input type='button' value='Usuń' onclick='del(".$row['id_rezerwacji'].")' />";
             
-            $HTMLreturnSequence.='</li>';
+    //        $HTMLreturnSequence.='</li>';
         }
         $stmt->closeCursor();
         $HTMLreturnSequence.='</ul>';
@@ -157,14 +135,13 @@ if (isset($_POST['submit'])) {
     }
 }
 $TRESC="";
+$TRESC1="";
 //$TRESC.=availibilityCheck($pdo,1,'2018-07-20','07:30:00','08:30:00');
 
 $TRESC.=formGenerate(basename(__FILE__),$warning);
-$TRESC.=getActors($pdo);
+$TRESC1=getActors($pdo);
 
 //Przetworzenie szablonów
 require_once 'szablony/witryna.php';
 
 ?>
-</body>
-</html>

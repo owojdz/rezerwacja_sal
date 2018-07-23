@@ -1,33 +1,25 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Educja rezerwacji</title>
-<meta http-equiv="Content-type" content="text/html; charset=UTF-8">
-<meta http-equiv="Content-Script-Type" content="text/javascript">
-<script type="text/javascript" src="js/ajax.js"></script>
-
-<SCRIPT LANGUAGE="JavaScript">
-function checkform ( form )
-{
-    if (form.timestart.value >= form.timefinish.value) {
-        alert( "Czas końca nie jest późniejszy niż czas początku spotkania"+form.timestart.value+"  "+form.timefinish.value );
-        return false ;
-    }
-
-    
-    return true;
-}
-function enable() {
-    document.getElementById("timefinish").disabled=false;
-}
-</script>
 <?php 
 function formGenerate($action,$data,$start,$stop,$sala,$id){
     $form="<form  name'formularz' action='$action' method='post' onsubmit=\"return checkform(this);\">";
-    $form.="<fieldset><legend>Dodawanie rezerwacji</legend>";
+    $form.="<fieldset><legend>Edycja rezerwacji</legend>";
 //    $form.=$warning;
     $form.="<p id='warning' type='hidden'></p>";
+    $form.="<label class='col-form-label' for='inputDefault'>Data:</label>";
+    $form.="<input type='date' name='data' id='data' min='2010-01-01' max='2020-12-31' value='$data' required class='form-control' placeholder='Default input'>";
+    $form.="<label class='col-form-label' for='inputDefault'>Początek spotkania:</label>";
+    $form.="<input type='time' name='timestart' id='timestart' min='07:00' max='16:00' step='1800' value='$start' onclick='enable()' onchange='add_one()' required class='form-control' placeholder='Default input'>";
+    $form.="<label class='col-form-label' for='inputDefault'>Koniec spotkania:</label>";
+    $form.="<input type='time' name='timefinish' id='timefinish' min='07:00' max='16:00' step='1800' value='$stop' required class='form-control' placeholder='Default input'><br/>";
+    $form.="<div><input type='button' value='Pokaż dostępne sale' name='dostepne' onClick=salaCheckEditJS(1,1,0) class='btn btn-secondary btn-lg btn-block'/></div>";
+    $form.="<label class='col-form-label' for='inputDefault'>Dostępne sala:</label>";
+    $form.="<select name='sale' id='sale' class='form-control' required></select><br />";
+    $form.="<div><input type='submit' value='Rezerwuj' name='submit' class='btn btn-primary btn-lg btn-block'/></div><br/>";
+    $form.="<input type='hidden' name='wynik' id='wynik'/> <br />";
+    $form.="<input type='hidden' value='$id' name='id' />";
+    $form.="<input type='hidden' value='$sala' name='sala' id='sala'/>";
+    
+    
+/*    $form.="<p id='warning' type='hidden'></p>";
     $form.="Data: <input type='date' name='data' id='data' min='2010-01-01' max='2020-12-31' value='$data' required /><br />";
     $form.="Początek: <input type='time' name='timestart' id='timestart' min='07:00' max='16:00' step='1800' value='$start' /> <br />";
     $form.="Koniec: <input type='time' name='timefinish' id='timefinish' min='07:00' max='16:00' step='1800' value='$stop' /> <br />";
@@ -37,7 +29,7 @@ function formGenerate($action,$data,$start,$stop,$sala,$id){
     $form.="<input type='hidden' value='$id' name='id' />";
     $form.="<input type='hidden' value='$sala' name='sala' id='sala'/>";
     
-    $form.="<input type='submit' value='Rezerwuj' name='submit' />";
+    $form.="<input type='submit' value='Rezerwuj' name='submit' />";*/
     $form.="</fieldset></form>";
     return $form;
 }
@@ -50,6 +42,7 @@ require_once 'include/settings.php';
 
 $LOKALIZACJA="Edycja rezerwacji";
 $TRESC='';
+$TRESC1='';
 
 if(!isset($_SESSION['username'])){
     header("Location: login.php");
@@ -79,6 +72,8 @@ if (isset($_POST['submit'])) {
             $pdo = new PDO("$DBEngine:host=$DBServer;dbname=$DBName", $DBUser, $DBPass);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);	//Konfiguracja zgłaszania błędów poprzez wyjątki
             
+            $stmt = $pdo->query("SET CHARSET utf8");
+            $stmt = $pdo->query("SET NAMES `utf8` COLLATE `utf8_general_ci`");
             $stmt = $pdo->prepare('  UPDATE
                                         rezerwacje
                                     SET 
@@ -92,7 +87,7 @@ if (isset($_POST['submit'])) {
             $stmt->bindValue(':id', $_POST['id'], PDO::PARAM_INT);
             $stmt->execute();
             $stmt->closeCursor();
-            $TRESC.="Poprawiono dane rezerwacji";
+            $TRESC1.="Poprawiono dane rezerwacji";
             $TRESC.=formGenerate(basename(__FILE__),$_POST['data'],$_POST['timestart'],$_POST['timefinish'],$_POST['sale'],$_POST['id']);
             //            header('Location: aktorzy.php');
         } catch (PDOException $e){
@@ -105,5 +100,4 @@ if (isset($_POST['submit'])) {
 require_once 'szablony/witryna.php';
 
 ?>
-</body>
-</html>
+<

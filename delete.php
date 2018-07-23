@@ -4,6 +4,7 @@ require_once 'include/settings.php';
 
 $LOKALIZACJA="aktorzy";
 $TRESC='';
+$TRESC1='';
 
 if(!isset($_SESSION['username'])){
     header("Location: login.php");
@@ -29,6 +30,7 @@ if(isset($_GET['id'])){
     //    header('Location: aktorzy.php');
 }
 //Przetworzenie szablonów
-require_once 'szablony/witryna.php';
+//require_once 'szablony/witryna.php';
+require_once 'rezerwacja.php';
 
 ?>
