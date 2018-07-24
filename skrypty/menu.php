@@ -29,31 +29,35 @@ function menu1($menu)
 }
 
 function getname($DBEngine,$DBServer,$DBUser,$DBPass,$DBName){
-    try{
-        $pdo = new PDO("$DBEngine:host=$DBServer;dbname=$DBName", $DBUser, $DBPass);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);	//Konfiguracja zgłaszania błędów poprzez wyjątki
-        
-    } catch (PDOException $e){
-        echo "Nie można się połączyć do bazy".$e->getMessage();
-        die();
-    }
-            try {
-                $user_id=$_SESSION['username'];
-                $stmt = $pdo->query("SET CHARSET utf8");
-                $stmt = $pdo->query("SET NAMES `utf8` COLLATE `utf8_general_ci`");
-                $stmt = $pdo->query('SELECT imie, nazwisko FROM pracownicy WHERE username="'.$user_id.'";');
+    if ($_SESSION['username']!='admin'){
+        try{
+            $pdo = new PDO("$DBEngine:host=$DBServer;dbname=$DBName", $DBUser, $DBPass);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);	//Konfiguracja zgłaszania błędów poprzez wyjątki
+        } catch (PDOException $e){
+            echo "Nie można się połączyć do bazy".$e->getMessage();
+            die();
+        }
+        try {
+            $user_id=$_SESSION['username'];
+            $stmt = $pdo->query("SET CHARSET utf8");
+            $stmt = $pdo->query("SET NAMES `utf8` COLLATE `utf8_general_ci`");
+            $stmt = $pdo->query('SELECT imie, nazwisko FROM pracownicy WHERE username="'.$user_id.'";');
                 //':username
                 //            $stmt->bindValue(':username', $_SESSION['username'], PDO::PARAM_STR);
-                $stmt->execute();
-                foreach ($stmt as $row) {
-                    $imie=$row['imie'];
-                    $nazwisko=$row['nazwisko'];
-                }
-                return $imie." ".$nazwisko;
-            } catch (PDOException $e){
-                echo "Nie można się połączyć do bazy".$e->getMessage();
-                die();
+            $stmt->execute();
+            foreach ($stmt as $row) {
+                $imie=$row['imie'];
+                $nazwisko=$row['nazwisko'];
             }
+            return $imie." ".$nazwisko;
+        } catch (PDOException $e){
+            echo "Nie można się połączyć do bazy".$e->getMessage();
+            die();
+        }
+    } else {
+        return $_SESSION['username'];
+    }
+    
 }
 
 
@@ -67,11 +71,9 @@ function menu($menu,$DBEngine,$DBServer,$DBUser,$DBPass,$DBName)
 	$tresc.='<div class="collapse navbar-collapse" id="navbarColor01">';
 	$tresc.='<ul class="navbar-nav mr-auto">';
 	
-	$tresc .='<li class="nav-item"><a class="nav-link" href=index.php>Index<span class="sr-only">(current)</span></a></li>';
-	
     foreach ($menu['Public'] as $adres => $napis) {
         if (is_file($adres))
-            $tresc .='<li class="nav-item active"><a class="nav-link" href='.$adres.'>'.$napis.'</a></li>';
+            $tresc .='<li class="nav-item"><a class="nav-link" href='.$adres.'>'.$napis.'</a></li>';
     }
     if (isset($_SESSION['username'])) {
         $tresc .= '<li class="nav-item"><a class="nav-link" href=logout.php>Wyloguj</a></li>';
@@ -80,9 +82,9 @@ function menu($menu,$DBEngine,$DBServer,$DBUser,$DBPass,$DBName)
     }
     $tresc.='</ul>';
     if(isset($_SESSION['username'])){
-  //  $tresc.='<form class="form-inline my-2 my-lg-0">';
-//    $tresc.='<b><p class="mr-sm-3" type="text">'.getname($DBEngine,$DBServer,$DBUser,$DBPass,$DBName).'</p></b>';
-//    $tresc.='</form>';
+        $tresc.='<form class="form-inline my-2 my-lg-0">';
+        $tresc.='<b><p class="mr-sm-3" type="text">'.getname($DBEngine,$DBServer,$DBUser,$DBPass,$DBName).'</p></b>';
+        $tresc.='</form>';
     }
     
     $tresc.='</div></nav>';

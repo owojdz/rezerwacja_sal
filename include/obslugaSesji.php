@@ -11,6 +11,7 @@ if (!isset($_SESSION['inicjuj']))
 
 if($_SESSION['ip'] != $_SERVER['REMOTE_ADDR'])
 {
-    die('Proba przejecia sesji udaremniona!');
+//    die('Proba przejecia sesji udaremniona!');
+      require_once 'login.php';
 }
 ?>

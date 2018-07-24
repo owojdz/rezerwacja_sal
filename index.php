@@ -11,8 +11,8 @@ TRESC;
 //$work="";
 //for($i=1;$i<50;$i++) $work.=$tresc.PHP_EOL."<br/>";
 //$TRESC=$work;
-$TRESC=$tresc;
-$TRESC1="";
+$TRESC1=$tresc;
+$TRESC="";
 
 //Przetworzenie szablonów
 require_once 'szablony/witryna.php';

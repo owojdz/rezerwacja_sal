@@ -80,10 +80,10 @@ class NibbleForm {
             'close_form_body' => '',
             'open_field' => '',
             'close_field' => '',
-            'open_html' => "<a>\n",
-            'close_html' => "</a>\n",
-            'open_submit' => "<a>\n",
-            'close_submit' => "</a>\n"
+            'open_html' => "<li>\n",
+            'close_html' => "</li>\n",
+            'open_submit' => "<li>\n",
+            'close_submit' => "</li>\n"
         ),
         'table' => array(
             'open_form' => '<table>',
