@@ -18,7 +18,7 @@ function formGenerate($action,$warning){
     $form.="<label class='col-form-label' for='inputDefault'>Koniec spotkania:</label>";
     $form.="<input type='time' name='timefinish' id='timefinish' min='07:00' max='16:00' step='1800' value='08:00' required class='form-control' placeholder='Default input'><br/>";
     $form.="<div><input type='button' value='Pokaż dostępne sale' name='dostepne' onClick=salaCheckJS(1,1,0) class='btn btn-secondary btn-lg btn-block'/></div>";
-    $form.="<label class='col-form-label' for='inputDefault'>Dostępne sala:</label>";
+    $form.="<label class='col-form-label' for='inputDefault'>Dostępne sale:</label>";
     $form.="<select name='sale' id='sale' class='form-control' required></select><br />";
     $form.="<div><input type='submit' value='Rezerwuj' name='submit' class='btn btn-primary btn-lg btn-block'/></div><br/>";
     
@@ -71,11 +71,10 @@ ORDER BY data,czas_start;');
 ?>
 
 
-</head>
-<body>
 <?php
 require_once 'include/obslugaSesji.php';
 require_once 'include/settings.php';
+require_once 'include/settings_db.php';
 require_once 'include/functions.php';
 
 $LOKALIZACJA="aktorzy";

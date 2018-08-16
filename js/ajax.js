@@ -23,7 +23,7 @@ function salaCheckJS(id_aktora,id_filmu,state) {	//Funkcja wywoływana przy klik
 		document.getElementById("warning").innerHTML = "<p type='text' id='warning'><font color='red'>Zakończenie rezerwacji nie jest później niż jej początek. Spróbuj jeszcze raz</font><br /></p>"; 
 	}else{
 		document.getElementById("warning").innerHTML = "<p id='warning' type='hidden'></p>"; 
-			handleAjaxRequest("ajax_request/swapMovies.php?&state="+state+"&data="+$data+"&start="+$start+"&stop="+$stop,
+			handleAjaxRequest("ajax_request/show.php?&state="+state+"&data="+$data+"&start="+$start+"&stop="+$stop,
 					function() {
 				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 					var requestOutput = JSON.parse(xmlhttp.responseText);
@@ -46,7 +46,7 @@ function salaCheckEditJS(id_aktora,id_filmu,state) {	//Funkcja wywoływana przy 
 		document.getElementById("warning").innerHTML = "<p type='text'><font color='red'>Zakończenie rezerwacji nie jest później niż jej początek. Spróbuj jeszcze raz</font><br /></p>"; 
 	}else{
 		document.getElementById("warning").innerHTML = "<p id='warning' type='hidden'></p>"; 
-			handleAjaxRequest("ajax_request/swapMovies.php?&state="+state+"&data="+$data+"&start="+$start+"&stop="+$stop+"&sala="+$sala,
+			handleAjaxRequest("ajax_request/show.php?&state="+state+"&data="+$data+"&start="+$start+"&stop="+$stop+"&sala="+$sala,
 					function() {
 				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 					var requestOutput = JSON.parse(xmlhttp.responseText);
@@ -57,3 +57,18 @@ function salaCheckEditJS(id_aktora,id_filmu,state) {	//Funkcja wywoływana przy 
 			});
 	};
 }
+
+function saleList(id_aktora,id_filmu,state) {	//Funkcja wywoływana przy kliknięciu na pozycję menu
+	$data=document.getElementById("data").value;
+		document.getElementById("warning").innerHTML = "<p id='warning' type='hidden'></p>"; 
+			handleAjaxRequest("ajax_request/show.php?&state="+state+"&data="+$data,
+					function() {
+				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+					var requestOutput = JSON.parse(xmlhttp.responseText);
+					document.getElementById("sale").innerHTML = requestOutput[0]; 
+//					document.getElementById("wynik").value = requestOutput[0]; 
+//					document.getElementById("filmyWithout").innerHTML = requestOutput[0];
+				}
+			});
+}	
+

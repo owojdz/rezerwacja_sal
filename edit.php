@@ -38,6 +38,7 @@ function formGenerate($action,$data,$start,$stop,$sala,$id){
 <body>
 <?php
 require_once 'include/obslugaSesji.php';
+require_once 'include/settings_db.php';
 require_once 'include/settings.php';
 
 $LOKALIZACJA="Edycja rezerwacji";

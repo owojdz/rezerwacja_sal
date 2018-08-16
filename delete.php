@@ -1,6 +1,7 @@
 <?php
 require_once 'include/obslugaSesji.php';
 require_once 'include/settings.php';
+require_once 'include/settings_db.php';
 
 $LOKALIZACJA="aktorzy";
 $TRESC='';

@@ -41,8 +41,69 @@ function checkform ( form )
         alert( "Czas końca nie jest późniejszy niż czas początku spotkania"+form.timestart.value+"  "+form.timefinish.value );
         return false ;
     }
-
-    
     return true;
 }
+function show_reservations_by_color(){
+	var c= document.getElementById("container"); 
+	var myNodelist = c.querySelectorAll(".cal");
+	//var myNodelist = c.querySelectorAll("div");
+	var i;
+	for (i = 0; i < myNodelist.length; i++) {
+	    myNodelist[i].style.backgroundColor = "white";
+	    myNodelist[i].innerText = "";
+	}
+		$data = document.getElementById("data").value;
+		$sala = "Czarna";
+		handleAjaxRequest("ajax_request/show_reservations.php?&data="+$data+"&sala="+$sala,
+			function() {
+				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+					hours = new Array();
+					hours = JSON.parse(xmlhttp.responseText);
+//					document.getElementById(hours[2]).style.backgroundColor = "blue"; 
+//					document.getElementById("wynik").value=hours[0][0]; 
+					var str, i, j, plus;
+					for(j=0;j<hours.length;j++){
+						for(i=0;i<hours[j].length;i+=2){
+	        					str=String(hours[j][i]);
+	        					plus=j+1;
+	        					str= str.concat(plus);
+	        					document.getElementById(str).style.backgroundColor = "#dfe2e8"; 
+	        					document.getElementById(str).style.fontSize = "small";
+	        					document.getElementById(str).innerText = hours[j][i+1]; 
+
+						}
+					}					
+				}
+			});
+}//show_reservations_by_color()
+
+function show_reservations_single(){
+	var c= document.getElementById("container"); 
+	var myNodelist = c.querySelectorAll(".cal");
+	var i;
+	for (i = 0; i < myNodelist.length; i++) {
+	    myNodelist[i].style.backgroundColor = "white";
+	    myNodelist[i].innerText = "";
+	}
+		$data = document.getElementById("data").value;
+		$sala = document.getElementById("sale").value;
+		handleAjaxRequest("ajax_request/show_reservations_single.php?&data="+$data+"&sala="+$sala,
+			function() {
+				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+					hours = new Array();
+					hours = JSON.parse(xmlhttp.responseText);
+					document.getElementById("nazwaSali").innerText = $sala; 
+					var str, i, j, plus;
+						for(i=0;i<hours.length;i+=2){
+	        					str=String(hours[i]);
+	        					plus=0+1;
+	        					str= str.concat(plus);
+	        					document.getElementById(str).style.backgroundColor = "#dfe2e8"; 
+	        					document.getElementById(str).style.fontSize = "small";
+	        					document.getElementById(str).innerText = hours[i+1]; 
+						}
+				}
+			});
+}//show_reservations_single()
+
 //</script>
