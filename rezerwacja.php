@@ -7,9 +7,9 @@ function formGenerate($action,$warning){
     $form.="<label class='col-form-label' for='inputDefault'>Data:</label>";
     $form.="<input type='date' name='data' id='data' min='2010-01-01' max='2020-12-31' value='".date('Y-m-d')."' required class='form-control' placeholder='Default input'>";
     $form.="<label class='col-form-label' for='inputDefault'>Początek spotkania:</label>";
-    $form.="<input type='time' name='timestart' id='timestart' min='07:00' max='16:00' step='1800' value='07:00' onclick='enable()' onchange='add_one()' required class='form-control' placeholder='Default input'>";
+    $form.="<input type='time' name='timestart' id='timestart' min='07:00' max='16:00' step='1800' value='07:00' onfocusout='my_round_start()' onchange='add_one()' required class='form-control' placeholder='Default input'>";
     $form.="<label class='col-form-label' for='inputDefault'>Koniec spotkania:</label>";
-    $form.="<input type='time' name='timefinish' id='timefinish' min='07:00' max='16:00' step='1800' value='08:00' required class='form-control' placeholder='Default input'><br/>";
+    $form.="<input type='time' name='timefinish' id='timefinish' min='07:00' max='16:00' step='1800' value='08:00' onfocusout='my_round_stop()' required class='form-control' placeholder='Default input'><br/>";
     $form.="<div><input type='button' value='Pokaż dostępne sale' name='dostepne' onClick='salaCheckJS()' class='btn btn-secondary btn-lg btn-block'/></div>";
     $form.="<label class='col-form-label' for='inputDefault'>Dostępne sale:</label>";
     $form.="<select name='sale' id='sale' class='form-control' required></select><br />";
@@ -89,17 +89,28 @@ if (isset($_POST['wartosc'])) {
             $stmt = $pdo->query("SET CHARSET utf8");
             $stmt = $pdo->query("SET NAMES `utf8` COLLATE `utf8_general_ci`");
             
-            $stmt = $pdo->prepare('  INSERT INTO
+            $stmt1 = $pdo->prepare('SELECT data, czas_start, czas_stop, id_pracownika, nazwa_sali FROM rezerwacje
+                                    WHERE data=:data AND czas_start=:czas_start AND czas_stop=:czas_stop AND id_pracownika=:id_p AND nazwa_sali=:n_sali;');
+            $stmt1->bindValue(':data', $_POST['data'], PDO::PARAM_STR);
+            $stmt1->bindValue(':czas_start', $_POST['timestart'], PDO::PARAM_STR);
+            $stmt1->bindValue(':czas_stop', $_POST['timefinish'], PDO::PARAM_STR);
+            $stmt1->bindValue(':id_p', $user_id, PDO::PARAM_STR);
+            $stmt1->bindValue(':n_sali', $_POST['sale'], PDO::PARAM_STR);
+            $stmt1->execute();
+            if($stmt1->rowCount()==0){
+                $stmt = $pdo->prepare('  INSERT INTO
                                         rezerwacje (data, czas_start, czas_stop, id_pracownika, nazwa_sali)
                                     VALUES
                                         (:data, :czas_start, :czas_stop, :id_p, :n_sali);');
-            $stmt->bindValue(':data', $_POST['data'], PDO::PARAM_STR);
-            $stmt->bindValue(':czas_start', $_POST['timestart'], PDO::PARAM_STR);
-            $stmt->bindValue(':czas_stop', $_POST['timefinish'], PDO::PARAM_STR);
-            $stmt->bindValue(':id_p', $user_id, PDO::PARAM_STR);
-            $stmt->bindValue(':n_sali', $_POST['sale'], PDO::PARAM_STR);
-            $stmt->execute();
-            $stmt->closeCursor();
+                $stmt->bindValue(':data', $_POST['data'], PDO::PARAM_STR);
+                $stmt->bindValue(':czas_start', $_POST['timestart'], PDO::PARAM_STR);
+                $stmt->bindValue(':czas_stop', $_POST['timefinish'], PDO::PARAM_STR);
+                $stmt->bindValue(':id_p', $user_id, PDO::PARAM_STR);
+                $stmt->bindValue(':n_sali', $_POST['sale'], PDO::PARAM_STR);
+                $stmt->execute();
+                $stmt->closeCursor();
+            }
+            $stmt1->closeCursor();
         } catch (PDOException $e){
             echo 'Błąd wprowadzania do bazy: ' . $e->getMessage();
         }

@@ -22,8 +22,7 @@ function checkform ()
 //						$valuess=false;
 					} else {
 						document.getElementById("wartosc").value="true";
-						document.getElementById("warning").innerHTML = "<p type='text' id='warning'><font color='red'>submit</font><br /></p>"; 
-//						document.getElementById("submi").value="set";
+//						document.getElementById("warning").innerHTML = "<p type='text' id='warning'><font color='red'>submit</font><br /></p>"; 
 						document.getElementById("formularz").submit();
 //						form.submit();
 						return true ;			
@@ -31,25 +30,34 @@ function checkform ()
 					}
 				}
 		});	
-//		if (document.getElementById("wartosc").value=="true") {
-//			alert( "submit");
-//			document.getElementById("warning").innerHTML = "<p type='text' id='warning'><font color='red'>ok</font><br /></p>"; 
-//			document.getElementById("formularz").submit();
-//			return true;
-//		} else {
-//	        wait(5000);
-//			return false;
-//		}	
     }
 }
-function wait(ms)
-{
-var d = new Date();
-var d2 = null;
-do { d2 = new Date(); }
-while(d2-d < ms);
-}
 
+function	my_round_start(){
+	document.getElementById("timestart").value=getNearestHalfHourTimeString(document.getElementById("timestart").value);
+}
+function	my_round_stop(){
+	document.getElementById("timefinish").value=getNearestHalfHourTimeString(document.getElementById("timefinish").value);
+}
+function getNearestHalfHourTimeString(time) {
+	var changed=false;
+	var hour = time.substring(0,2);
+    var minutes = time.substring(3,5);
+    if (minutes < 15) {
+        minutes = "00";
+    } else if (minutes < 45){
+        minutes = "30";
+    } else {
+        minutes = "00";
+        ++hour;
+        changed=true;
+    }
+    if (hour<10 && changed){
+		return("0"+hour + ":" + minutes);
+    } else{
+    		return(hour + ":" + minutes);
+    }
+}
 function enable() {
 //    document.getElementById("timefinish").disabled=false;    
 }
@@ -62,6 +70,7 @@ function add_one() {
 	str = hint.toString();
 	if (hint<10) str="0".concat(str);
 	str = str.concat(res);
+	str=getNearestHalfHourTimeString(str);
 	document.getElementById("timefinish").value=str;
 }
 function edit(id) {
