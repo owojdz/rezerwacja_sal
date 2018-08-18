@@ -1,12 +1,55 @@
 //<SCRIPT LANGUAGE="JavaScript">
-function checkform ( form )
+function checkform ()
 {
-    if (form.timestart.value >= form.timefinish.value) {
-//        alert( "Czas końca nie jest późniejszy niż czas początku spotkania"+form.timestart.value+"  "+form.timefinish.value );
+	$data = document.getElementById("data").value;
+	$sala = document.getElementById("sale").value;
+	$start=document.getElementById("timestart").value;
+	$stop=document.getElementById("timefinish").value;
+	$valuess=false;
+	if($start>=$stop){
+		document.getElementById("warning").innerHTML = "<p type='text' id='warning'><font color='red'>Zakończenie rezerwacji nie jest później niż jej początek. Spróbuj jeszcze raz</font><br /></p>"; 
         return false ;
+	}else{
+		document.getElementById("warning").innerHTML = "<p id='warning' type='hidden'></p>"; 
+			handleAjaxRequest("ajax_request/show_reservations.php?&sala="+$sala+"&data="+$data+"&start="+$start+"&stop="+$stop,
+					function() {
+				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+					result = new Array();
+					result = JSON.parse(xmlhttp.responseText);
+					if (result[0]=="false"){
+						document.getElementById("warning").innerHTML = "<p type='text' id='warning'><font color='red'>Sala jest już zajęta w wybranym terminie. Spróbuj jeszcze raz</font><br /></p>";
+						return false ;
+//						$valuess=false;
+					} else {
+						document.getElementById("wartosc").value="true";
+						document.getElementById("warning").innerHTML = "<p type='text' id='warning'><font color='red'>submit</font><br /></p>"; 
+//						document.getElementById("submi").value="set";
+						document.getElementById("formularz").submit();
+//						form.submit();
+						return true ;			
+//						$valuess=true;
+					}
+				}
+		});	
+//		if (document.getElementById("wartosc").value=="true") {
+//			alert( "submit");
+//			document.getElementById("warning").innerHTML = "<p type='text' id='warning'><font color='red'>ok</font><br /></p>"; 
+//			document.getElementById("formularz").submit();
+//			return true;
+//		} else {
+//	        wait(5000);
+//			return false;
+//		}	
     }
-    return true;
 }
+function wait(ms)
+{
+var d = new Date();
+var d2 = null;
+do { d2 = new Date(); }
+while(d2-d < ms);
+}
+
 function enable() {
 //    document.getElementById("timefinish").disabled=false;    
 }
@@ -35,14 +78,14 @@ function del(id) {
  		this.open(res,"_self");
 	}
 }
-function checkform ( form )
+/*function checkform ( form )
 {
     if (form.timestart.value >= form.timefinish.value) {
         alert( "Czas końca nie jest późniejszy niż czas początku spotkania"+form.timestart.value+"  "+form.timefinish.value );
         return false ;
     }
     return true;
-}
+}*/
 function show_reservations_by_color(){
 	var c= document.getElementById("container"); 
 	var myNodelist = c.querySelectorAll(".cal");

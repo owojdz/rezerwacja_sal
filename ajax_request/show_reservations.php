@@ -1,8 +1,7 @@
 <?php
 require_once '../include/settings_db.php';
 
-function availibilityCheck($pdo,$nazwa_sali,$data,$start,$stop){
-    $inner=0;
+function checkAvailibility($pdo,$sala,$data,$start,$stop){
     try {
         $stmt = $pdo->query("SET CHARSET utf8");
         $stmt = $pdo->query("SET NAMES `utf8` COLLATE `utf8_general_ci`");
@@ -13,19 +12,14 @@ function availibilityCheck($pdo,$nazwa_sali,$data,$start,$stop){
         $stmt->bindValue(':start', $start, PDO::PARAM_STR);
         $stmt->bindValue(':stop', $stop, PDO::PARAM_STR);
         $stmt->execute();
-        $tresc="";
-        if($inner){
-            $tresc.='<select id="sale_ajax" name="sale_ajax">'.PHP_EOL;
-        }
+        $ar1=array("false");;
         foreach ($stmt as $row){
-            //            $tresc.="<option value='".$row['nazwa_sali']."' >".$row['czas_start']." ".$row['czas_stop']."</option>".PHP_EOL;
-            $tresc.="<option value='".$row['nazwa_sali']."' >".$row['nazwa_sali']."</option>".PHP_EOL;
-        }
-        if($inner){
-            $tresc.='</select><br/>'.PHP_EOL;
+            if ($row['nazwa_sali']==$sala) {
+                $ar1=array("ok");
+            }
         }
         $stmt->closeCursor();
-        return  $tresc;
+        return  $ar1;
     } catch (PDOException $e){
         echo 'Błąd odczytu z bazy: ' . $e->getMessage();
     }
@@ -42,7 +36,6 @@ function showAvailibility($pdo,$data,$sala){
                                 WHERE rezerwacje.id_pracownika=pracownicy.id_pracownika and rezerwacje.nazwa_sali=sale.nazwa_sali and rezerwacje.data=:data;');
         
         $stmt->bindValue(':data', $data, PDO::PARAM_STR);
-//        $stmt->bindValue(':sala', $sala, PDO::PARAM_STR);
         $stmt->execute();
         $tresc="";
         $ar1=array();
@@ -102,10 +95,12 @@ try{
     $value;
      $pdo = new PDO("$DBEngine:host=$DBServer;dbname=$DBName", $DBUser, $DBPass);
      $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);	//Konfiguracja zgłaszania błędów poprzez wyjątki
-
     
-     echo json_encode(showAvailibility($pdo, $_GET['data'], $_GET['sala']));
-     
+     if(isset($_GET['start'])){
+         echo json_encode(checkAvailibility($pdo, $_GET['sala'], $_GET['data'], $_GET['start'], $_GET['stop']));
+     } else {
+         echo json_encode(showAvailibility($pdo, $_GET['data'], $_GET['sala']));
+     }
 } catch (PDOException $e){
     echo "Nie można się połączyć do bazy".$e->getMessage();
     die();

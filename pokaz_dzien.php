@@ -5,17 +5,10 @@ function formGenerate($action){
     $form.="<p id='warning' type='hidden'></p>";
     $form.="<label class='col-form-label' for='inputDefault'>Data:</label>";
     $form.="<input type='date' name='data' id='data' min='2010-01-01' max='2020-12-31' value='".date('Y-m-d')."' required class='form-control' placeholder='Default input' onchange= 'show_reservations_by_color()'>";
-//    $form.="wynik: <input type='text' name='wynik' id='wynik'/> <br />";
-//    $form.="<div><input type='button' value='Pokaż' name='submit' class='btn btn-primary btn-lg btn-block' onclick= 'show_reservations_by_color()'/></div><br/>";
-//    $form.="<div><input type='submit' value='Pokaż' name='submit' class='btn btn-primary btn-lg btn-block' onclick= 'myFunction()'/></div><br/>";
     $form.="</fieldset></form>";
     return $form;
 }
-?>
-</head>
 
-<body>
-<?php
 require_once 'include/obslugaSesji.php';
 require_once 'include/settings.php';
 require_once 'include/settings_db.php';
@@ -23,7 +16,6 @@ require_once 'include/functions.php';
 
 $LOKALIZACJA="";
 $TRESC1="";
-   //     $TRESC1 = '<b>Lista rezerwacji:</b></br>';
         $TRESC1 .= '<div class="container" id="container">';
         $TRESC1 .= '<div class="row">';
         $TRESC1 .= '<div class="col-lg-2 col-sm-2">od - do</div>';

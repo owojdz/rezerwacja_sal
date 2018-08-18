@@ -1,12 +1,12 @@
 <?php 
 function formGenerate($action){
-    $form="<form  class='form-group' name'formularz' action='$action' method='post' onsubmit=\"return checkform(this);\">";
+    $form="<form  class='form-group' name'formularz' action='$action' method='post'>";
     $form.="<fieldset><legend>Pokaż zajętość sali</legend>";
     $form.="<p id='warning' type='hidden'></p>";
     $form.="<label class='col-form-label' for='inputDefault'>Data:</label>";
-    $form.="<input type='date' name='data' id='data' min='2010-01-01' max='2020-12-31' value='".date('Y-m-d')."' required class='form-control' placeholder='Default input' onClick=saleList(1,1,0) >";
+    $form.="<input type='date' name='data' id='data' min='2010-01-01' max='2020-12-31' value='".date('Y-m-d')."' required class='form-control' placeholder='Default input' onclick=saleList() onchange= 'show_reservations_single()'>";
     $form.="<label class='col-form-label' for='inputDefault'>Wybierz sale:</label>";
-    $form.="<select name='sale' id='sale' class='form-control' onchange= 'show_reservations_single()' required></select><br />";
+    $form.="<select name='sale' id='sale' class='form-control' onclick= 'show_reservations_single()' onchange= 'show_reservations_single()' onfocus='saleList()' required></select><br />";
     $form.="</fieldset></form>";
     return $form;
 }
@@ -44,7 +44,8 @@ $TRESC="";
 $TRESC.=formGenerate(basename(__FILE__));
 $TRESC1 .= '<script type="text/javascript" src="js/ajax.js"></script>';
 $TRESC1 .= '<script type="text/javascript" src="js/javascript.js"></script>';
-$TRESC1 .= '<script type="text/javascript"> show_reservations_by_color(); </script>';
+//$TRESC1 .= '<script type="text/javascript"> show_reservations_by_color(); </script>';
+
 
 //Przetworzenie szablonów
 require_once 'szablony/witryna.php';

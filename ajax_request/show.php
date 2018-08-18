@@ -1,16 +1,7 @@
 <?php
 require_once '../include/settings_db.php';
-//require_once 'include/functions.php';
-/*$DBEngine = 'mysql';
-$DBServer = 'localhost:3306';
-$DBUser   = 'root';
-$DBPass   = '';
-$DBName   = 'firma';*/
-
-function availibilityCheck($pdo,$nazwa_sali,$data,$start,$stop){
-    $inner=0;
+function availibilityCheck($pdo,$data,$start,$stop){
     try {
-      //  $stmt = $pdo->prepare(' SELECT nazwa_sali,czas_start,czas_stop FROM rezerwacje WHERE data=:data and NOT ((:start BETWEEN `czas_start` AND `czas_stop`) OR :stop BETWEEN `czas_start` AND `czas_stop`);');
         $stmt = $pdo->query("SET CHARSET utf8");
         $stmt = $pdo->query("SET NAMES `utf8` COLLATE `utf8_general_ci`");
         
@@ -21,15 +12,8 @@ function availibilityCheck($pdo,$nazwa_sali,$data,$start,$stop){
         $stmt->bindValue(':stop', $stop, PDO::PARAM_STR);
         $stmt->execute();
         $tresc="";
-        if($inner){
-            $tresc.='<select id="sale_ajax" name="sale_ajax">'.PHP_EOL;
-        }
         foreach ($stmt as $row){
-            //            $tresc.="<option value='".$row['nazwa_sali']."' >".$row['czas_start']." ".$row['czas_stop']."</option>".PHP_EOL;
             $tresc.="<option value='".$row['nazwa_sali']."' >".$row['nazwa_sali']."</option>".PHP_EOL;
-        }
-        if($inner){
-            $tresc.='</select><br/>'.PHP_EOL;
         }
         $stmt->closeCursor();
         return  $tresc;
@@ -37,8 +21,7 @@ function availibilityCheck($pdo,$nazwa_sali,$data,$start,$stop){
         echo 'Błąd odczytu z bazy: ' . $e->getMessage();
     }
 }
-function availibilityCheckEdit($pdo,$nazwa_sali,$data,$start,$stop,$sala){
-    $inner=0;
+function availibilityCheckEdit($pdo,$data,$start,$stop,$sala){
     try {
         //  $stmt = $pdo->prepare(' SELECT nazwa_sali,czas_start,czas_stop FROM rezerwacje WHERE data=:data and NOT ((:start BETWEEN `czas_start` AND `czas_stop`) OR :stop BETWEEN `czas_start` AND `czas_stop`);');
         $stmt = $pdo->query("SET CHARSET utf8");
@@ -51,18 +34,11 @@ function availibilityCheckEdit($pdo,$nazwa_sali,$data,$start,$stop,$sala){
         $stmt->bindValue(':stop', $stop, PDO::PARAM_STR);
         $stmt->execute();
         $tresc="";
-        if($inner){
-            $tresc.='<select id="sale_ajax" name="sale_ajax">'.PHP_EOL;
-        }
         $tresc.="<option value='".$sala."' >".$sala."</option>".PHP_EOL;
         foreach ($stmt as $row){
-            //            $tresc.="<option value='".$row['nazwa_sali']."' >".$row['czas_start']." ".$row['czas_stop']."</option>".PHP_EOL;
             if($row['nazwa_sali']!=$sala){
                 $tresc.="<option value='".$row['nazwa_sali']."' >".$row['nazwa_sali']."</option>".PHP_EOL;
             }
-        }
-        if($inner){
-            $tresc.='</select><br/>'.PHP_EOL;
         }
         $stmt->closeCursor();
         return  $tresc;
@@ -74,7 +50,6 @@ function availibilityCheckEdit($pdo,$nazwa_sali,$data,$start,$stop,$sala){
 function saleList($pdo,$data){
     $inner=0;
     try {
-        //  $stmt = $pdo->prepare(' SELECT nazwa_sali,czas_start,czas_stop FROM rezerwacje WHERE data=:data and NOT ((:start BETWEEN `czas_start` AND `czas_stop`) OR :stop BETWEEN `czas_start` AND `czas_stop`);');
         $stmt = $pdo->query("SET CHARSET utf8");
         $stmt = $pdo->query("SET NAMES `utf8` COLLATE `utf8_general_ci`");
         
@@ -86,7 +61,6 @@ function saleList($pdo,$data){
             $tresc.='<select id="sale_ajax" name="sale_ajax">'.PHP_EOL;
         }
         foreach ($stmt as $row){
-            //            $tresc.="<option value='".$row['nazwa_sali']."' >".$row['czas_start']." ".$row['czas_stop']."</option>".PHP_EOL;
                 $tresc.="<option value='".$row['nazwa_sali']."' >".$row['nazwa_sali']."</option>".PHP_EOL;
         }
         if($inner){
@@ -104,28 +78,15 @@ try{
      $pdo = new PDO("$DBEngine:host=$DBServer;dbname=$DBName", $DBUser, $DBPass);
      $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);	//Konfiguracja zgłaszania błędów poprzez wyjątki
 
-    if($_GET['state']==1){
-//        addMovieToActor($pdo,$_GET['id_aktora'],$_GET['id_filmu']);
-        $value="true";
-    }
-    
-    if($_GET['state']==0){
-//        removeActorFromMovie($pdo,$_GET['id_aktora'],$_GET['id_filmu']);
-        $value="false";
-    }
-    
-//    $not_in_films=createFilmyWithoutActorSelect($pdo,$_GET['id_aktora'],FALSE);
-//    $in_films=createFilmyWithActorSelect($pdo,$_GET['id_aktora'],FALSE);
-    if(isset($_GET['start'])){
+     if(isset($_GET['start'])){
         if(isset($_GET['sala'])){
-            $value=availibilityCheckEdit($pdo,'Czarna',$_GET['data'],$_GET['start'],$_GET['stop'],$_GET['sala']);
+            $value=availibilityCheckEdit($pdo,$_GET['data'],$_GET['start'],$_GET['stop'],$_GET['sala']);
         } else {
-            $value=availibilityCheck($pdo,'Czarna',$_GET['data'],$_GET['start'],$_GET['stop']);
+            $value=availibilityCheck($pdo,$_GET['data'],$_GET['start'],$_GET['stop']);
         }
     } else {
         $value=saleList($pdo,$_GET['data']);
     }
-//    echo $value;
     $array=array($value);
     echo json_encode($array);
     

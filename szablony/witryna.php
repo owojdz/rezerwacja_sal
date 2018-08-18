@@ -4,9 +4,7 @@
 <title><?php $NAZWA_STRONY ?></title>
 <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
 <link href="css/bootstrap.min.css" rel="stylesheet">
-<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">-->
 <link rel="Stylesheet" type="text/css" href="css/style.css">	
-<!-- <link rel="Stylesheet" type="text/css" href="styles/menu.css" />	 -->
 </head>
 <body>
 	<div class="container">
@@ -15,7 +13,6 @@
 			<div class="col-lg-3 col-sm-6" id="TRESC"><?php echo $TRESC;?></div>
 			<div class="col-lg-9 col-sm-12" id="TRESC1"><?php echo $TRESC1;?></div>
 		</div>
-		<!-- <div id="STOPKA"><?php require_once 'szablony/stopka.php';?></div>  -->
 	</div>
 	<script type="text/javascript" src="js/ajax.js"></script>
 	<script type="text/javascript" src="js/javascript.js"></script>
