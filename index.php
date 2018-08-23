@@ -2,15 +2,15 @@
 require_once 'include/obslugaSesji.php';
 require_once 'include/settings.php';
 
-$LOKALIZACJA="Witaj";
-
-//Generacja treści
+//Generacja treści strony startowej
 $tresc=<<<TRESC
-	To jest strona powitalna projektu nr 8 - rezerwacja sal w firmie
+	To jest strona powitalna projektu nr 8 - rezerwacja sal w firmie <br/><br/>
+
+    Skład osobowy grupy:<br/><b>
+        Katarzyna Kowalczyk<br/>
+        Olaf Wojdziak<br/>
+        Marcin Kowalczyk<br/></b>
 TRESC;
-//$work="";
-//for($i=1;$i<50;$i++) $work.=$tresc.PHP_EOL."<br/>";
-//$TRESC=$work;
 $TRESC1=$tresc;
 $TRESC="";
 

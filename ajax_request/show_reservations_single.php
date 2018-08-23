@@ -1,32 +1,16 @@
 <?php
 require_once '../include/settings_db.php';
 
-function availibilityCheck($pdo,$nazwa_sali,$data,$start,$stop){
+/**Listuje zajętości wybranej sali w wybranym dniu
+ * @returns - tablicę zajętości
+ */
+function showOccupancy($pdo,$data,$sala){
     try {
+        //zapewnienie poprawngo kodowania polskich zanków
         $stmt = $pdo->query("SET CHARSET utf8");
         $stmt = $pdo->query("SET NAMES `utf8` COLLATE `utf8_general_ci`");
         
-        $stmt = $pdo->prepare(' SELECT nazwa_sali FROM sale WHERE `nazwa_sali` NOT IN (SELECT nazwa_sali FROM rezerwacje WHERE data=:data and ((:start BETWEEN `czas_start` AND `czas_stop`) OR :stop BETWEEN `czas_start` AND `czas_stop`));');
-        
-        $stmt->bindValue(':data', $data, PDO::PARAM_STR);
-        $stmt->bindValue(':start', $start, PDO::PARAM_STR);
-        $stmt->bindValue(':stop', $stop, PDO::PARAM_STR);
-        $stmt->execute();
-        $tresc="";
-        foreach ($stmt as $row){
-            $tresc.="<option value='".$row['nazwa_sali']."' >".$row['nazwa_sali']."</option>".PHP_EOL;
-        }
-        $stmt->closeCursor();
-        return  $tresc;
-    } catch (PDOException $e){
-        echo 'Błąd odczytu z bazy: ' . $e->getMessage();
-    }
-}
-function showAvailibility($pdo,$data,$sala){
-    try {
-        $stmt = $pdo->query("SET CHARSET utf8");
-        $stmt = $pdo->query("SET NAMES `utf8` COLLATE `utf8_general_ci`");
-        
+        //przygotowanie zapytania do bazy sprawdzającego kiedy sala jest zajęta
         $stmt = $pdo->prepare(' SELECT rezerwacje.data, rezerwacje.czas_start, rezerwacje.czas_stop, pracownicy.imie, pracownicy.nazwisko
                                 FROM rezerwacje JOIN pracownicy
                                 WHERE rezerwacje.id_pracownika=pracownicy.id_pracownika and rezerwacje.nazwa_sali=:sala and rezerwacje.data=:data;');
@@ -36,6 +20,7 @@ function showAvailibility($pdo,$data,$sala){
         $stmt->execute();
         $tresc="";
         $ar=array();
+        //wypełnienie tablicy rezerwacji
         foreach ($stmt as $row){
             $name = $row['imie']." ".$row['nazwisko'];
             $str1 =$row['czas_start'];
@@ -64,10 +49,12 @@ function showAvailibility($pdo,$data,$sala){
 
 try{
     $value;
-     $pdo = new PDO("$DBEngine:host=$DBServer;dbname=$DBName", $DBUser, $DBPass);
-     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);	//Konfiguracja zgłaszania błędów poprzez wyjątki
+    //nawiązanie połączenia z bazą
+    $pdo = new PDO("$DBEngine:host=$DBServer;dbname=$DBName", $DBUser, $DBPass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);	//Konfiguracja zgłaszania błędów poprzez wyjątki
 
-     echo json_encode(showAvailibility($pdo, $_GET['data'], $_GET['sala']));
+    //zwrócenie wartości zapytania
+    echo json_encode(showOccupancy($pdo, $_GET['data'], $_GET['sala']));
      
 } catch (PDOException $e){
     echo "Nie można się połączyć do bazy".$e->getMessage();

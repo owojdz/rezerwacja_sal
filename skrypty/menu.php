@@ -83,7 +83,7 @@ function menu($menu,$DBEngine,$DBServer,$DBUser,$DBPass,$DBName)
     $tresc.='</ul>';
     if(isset($_SESSION['username'])){
         $tresc.='<form class="form-inline my-2 my-lg-0">';
-        $tresc.='<b><p class="mr-sm-3" type="text">'.getname($DBEngine,$DBServer,$DBUser,$DBPass,$DBName).'</p></b>';
+        $tresc.='<p class="mr-sm-3">'.getname($DBEngine,$DBServer,$DBUser,$DBPass,$DBName).'</p>';
         $tresc.='</form>';
     }
     

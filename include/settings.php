@@ -2,8 +2,9 @@
 $MENU=array(
     "Public"=>array(
         "rezerwacja.php"=>"Rezerwacja",
-    		"pokaz_dzien.php"=>"Rezerwacja na dzień",
-        "pokaz_zajetosc.php"=>"Pokaż zajętość sal",
+        "rezerwacja_term.php"=>"Rezerwacja z terminarza",
+        "pokaz_dzien.php"=>"Podgląd rezerwacji",
+        "pokaz_zajetosc.php"=>"Zajętość poszczególnych sal",
         
     ),
     "Private"=>array( ));
